@@ -1,0 +1,88 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+
+    <AssemblyName>Wetstone</AssemblyName>
+    <Description>Plugin framework and general utilities for VRising mods.</Description>
+
+    <BepInExPluginGuid>xyz.molenzwiebel.wetstone</BepInExPluginGuid>
+    <Version>1.0.0</Version>
+
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+
+    <UnhollowedDllPath>D:\Games\Steam\steamapps\common\VRising\BepInEx\unhollowed</UnhollowedDllPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-*" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
+    <PackageReference Include="iced" Version="1.17.0" />
+    <PackageReference Include="Standart.Hash.xxHash" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Costura.Fody" Version="5.7.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Fody" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ProjectM.Shared">
+      <HintPath>$(UnhollowedDllPath)\ProjectM.Shared.dll</HintPath>
+    </Reference>
+
+    <Reference Include="IL2Cppmscorlib">
+      <HintPath>$(UnhollowedDllPath)\Il2Cppmscorlib.dll</HintPath>
+    </Reference>
+
+    <Reference Include="ProjectM">
+      <HintPath>$(UnhollowedDllPath)\ProjectM.dll</HintPath>
+    </Reference>
+
+    <Reference Include="com.stunlock.network">
+      <HintPath>$(UnhollowedDllPath)\com.stunlock.network.dll</HintPath>
+    </Reference>
+
+    <Reference Include="UnityEngine.InputLegacyModule.dll">
+      <HintPath>$(UnhollowedDllPath)\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+
+    <Reference Include="Unity.Collections">
+      <HintPath>$(UnhollowedDllPath)\Unity.Collections.dll</HintPath>
+    </Reference>
+
+    <Reference Include="Unity.Entities">
+      <HintPath>$(UnhollowedDllPath)\Unity.Entities.dll</HintPath>
+    </Reference>
+
+    <Reference Include="ProjectM.HUD">
+      <HintPath>$(UnhollowedDllPath)\ProjectM.HUD.dll</HintPath>
+    </Reference>
+
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(UnhollowedDllPath)\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+
+    <Reference Include="ProjectM.CodeGeneration">
+      <HintPath>$(UnhollowedDllPath)\ProjectM.CodeGeneration.dll</HintPath>
+    </Reference>
+
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(UnhollowedDllPath)\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+
+    <Reference Include="Stunlock.Core">
+      <HintPath>$(UnhollowedDllPath)\Stunlock.Core.dll</HintPath>
+    </Reference>
+
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$(UnhollowedDllPath)\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
