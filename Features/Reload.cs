@@ -59,6 +59,7 @@ internal static class Reload
     private static void HandleReloadCommand(VChatEvent ev)
     {
         if (ev.Message != _reloadCommand) return;
+        if (!ev.User.IsAdmin) return; // ignore non-admin reload attempts
 
         ev.Cancel();
 
@@ -94,6 +95,8 @@ internal static class Reload
 
     private static List<string> LoadPlugins()
     {
+        if (!Directory.Exists(_reloadPluginsFolder)) return new();
+
         return Directory.GetFiles(_reloadPluginsFolder, "*.dll").SelectMany(LoadPlugin).ToList();
     }
 

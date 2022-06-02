@@ -23,9 +23,9 @@ namespace Wetstone
             WetstonePlugin.Logger = Log;
             Instance = this;
 
-            _enableReloadCommand = Config.Bind("General", "EnableReloadCommand", true, "Enable the reload command.");
-            _reloadCommand = Config.Bind("General", "ReloadCommand", "!reload", "The command to reload the plugin.");
-            _reloadPluginsFolder = Config.Bind("General", "ReloadPluginsFolder", "BepInEx/WetstonePlugins", "The folder to (re)load plugins from.");
+            _enableReloadCommand = Config.Bind("General", "EnableReloading", true, "Whether to enable the reloading feature (both client and server).");
+            _reloadCommand = Config.Bind("General", "ReloadCommand", "!reload", "Server text command to reload plugins. User must be an admin.");
+            _reloadPluginsFolder = Config.Bind("General", "ReloadPluginsFolder", "BepInEx/WetstonePlugins", "The folder to (re)load plugins from, relative to the game directory.");
         }
 
         public override void Load()
