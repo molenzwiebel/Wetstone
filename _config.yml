@@ -1,0 +1,19 @@
+remote_theme: just-the-docs/just-the-docs
+title: Wetstone
+description: Plugin framework and general utilities for V Rising mods.
+
+baseurl: "/wetstone"
+url: "https://molenzwiebel.github.io"
+
+# Aux links for the upper right navigation
+aux_links:
+  "Source Code":
+    - "//github.com/molenzwiebel/Wetstone"
+  "Download":
+    - "//v-rising.thunderstore.io/package/molenzwiebel/Wetstone"
+
+gh_edit_link: true
+gh_edit_link_text: "Edit this page on GitHub."
+gh_edit_repository: "https://github.com/molenzwiebel/Wetstone"
+gh_edit_branch: "github-pages"
+gh_edit_view_mode: "tree"
