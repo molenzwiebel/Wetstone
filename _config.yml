@@ -2,8 +2,11 @@ remote_theme: just-the-docs/just-the-docs
 title: Wetstone
 description: Plugin framework and general utilities for V Rising mods.
 
-baseurl: "/wetstone"
+baseurl: "/Wetstone"
 url: "https://molenzwiebel.github.io"
+
+plugins:
+  - jekyll-remote-theme
 
 # Aux links for the upper right navigation
 aux_links:
