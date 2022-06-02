@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>WetstoneTest</PackageId>
+    <PackageId>Wetstone</PackageId>
     <Authors>molenzwiebel (Thijs Molendijk)</Authors>
     <Company>molenzwiebel</Company>
 

@@ -3,4 +3,6 @@ obj/
 ReleaseOutput/
 site_/
 .jekyll-cache/
+build/
+release.sh
 FodyWeavers.xsd
