@@ -1,7 +1,7 @@
 bin/
 obj/
 ReleaseOutput/
-site_/
+_site/
 .jekyll-cache/
 build/
 release.sh
