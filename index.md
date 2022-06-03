@@ -1,10 +1,12 @@
 ---
 layout: default
-title: Wetstone
-nav_exclude: true
+title: Home
+nav_order: 0
 ---
 
-# Wetstone
+![](https://i.imgur.com/XghiZXX.png)
+
+---
 
 Wetstone is a plugin API for creating mods for [V Rising](https://store.steampowered.com/app/1604030/V_Rising/). If you are a mod developer, using Wetstone allows you to take advantage of tools like hot reloading, easy hooks and extensions, and user-friendly configuration.
 
