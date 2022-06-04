@@ -15,7 +15,8 @@ namespace Wetstone
 #nullable enable
 
         private ConfigEntry<bool> _enableReloadCommand;
-        private ConfigEntry<string> _reloadCommand;
+        private ConfigEntry<string> _reloadCommandChat;
+        private ConfigEntry<string> _reloadCommandRcon;
         private ConfigEntry<string> _reloadPluginsFolder;
 
         public WetstonePlugin() : base()
@@ -24,7 +25,8 @@ namespace Wetstone
             Instance = this;
 
             _enableReloadCommand = Config.Bind("General", "EnableReloading", true, "Whether to enable the reloading feature (both client and server).");
-            _reloadCommand = Config.Bind("General", "ReloadCommand", "!reload", "Server text command to reload plugins. User must be an admin.");
+            _reloadCommandChat = Config.Bind("General", "ReloadCommandChat", "!plugins.reload *", "Server chat command to reload plugins. User must be an admin.");
+            _reloadCommandRcon = Config.Bind("General", "ReloadCommandRcon", "plugins.reload *", "Server rcon command to reload plugins. The user must be authorized for the server to execute the commands.");
             _reloadPluginsFolder = Config.Bind("General", "ReloadablePluginsFolder", "BepInEx/WetstonePlugins", "The folder to (re)load plugins from, relative to the game directory.");
         }
 
@@ -33,6 +35,7 @@ namespace Wetstone
             // Hooks
             if (VWorld.IsServer)
             {
+                Hooks.Rcon.Initialize();
                 Hooks.Chat.Initialize();
                 Hooks.OnInitialize.Initialize();
             }
@@ -48,7 +51,7 @@ namespace Wetstone
             // NOTE: MUST BE LAST. This initializes plugins that depend on our state being set up.
             if (VWorld.IsClient || _enableReloadCommand.Value)
             {
-                Features.Reload.Initialize(_reloadCommand.Value, _reloadPluginsFolder.Value);
+                Features.Reload.Initialize(_reloadCommandChat.Value, _reloadCommandRcon.Value, _reloadPluginsFolder.Value);
             }
         }
 
@@ -57,6 +60,7 @@ namespace Wetstone
             // Hooks
             if (VWorld.IsServer)
             {
+                Hooks.Rcon.Uninitialize();
                 Hooks.Chat.Uninitialize();
                 Hooks.OnInitialize.Uninitialize();
             }
