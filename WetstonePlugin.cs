@@ -34,7 +34,6 @@ namespace Wetstone
             if (VWorld.IsServer)
             {
                 Hooks.Chat.Initialize();
-                Hooks.OnInitialize.Initialize();
             }
 
             if (VWorld.IsClient)
@@ -42,6 +41,9 @@ namespace Wetstone
                 API.KeybindManager.Load();
                 Hooks.Keybindings.Initialize();
             }
+
+            Hooks.OnInitialize.Initialize();
+            Network.SerializationHooks.Initialize();
 
             Logger.LogInfo($"Wetstone v{PluginInfo.PLUGIN_VERSION} loaded.");
 
@@ -58,7 +60,6 @@ namespace Wetstone
             if (VWorld.IsServer)
             {
                 Hooks.Chat.Uninitialize();
-                Hooks.OnInitialize.Uninitialize();
             }
 
             if (VWorld.IsClient)
@@ -66,6 +67,9 @@ namespace Wetstone
                 API.KeybindManager.Save();
                 Hooks.Keybindings.Uninitialize();
             }
+
+            Hooks.OnInitialize.Uninitialize();
+            Network.SerializationHooks.Uninitialize();
 
             return true;
         }
