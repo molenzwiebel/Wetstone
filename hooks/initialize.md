@@ -17,7 +17,7 @@ In order to run code when the game has finished initializing, simply implement t
 ```csharp
 public class Plugin : BasePlugin, IRunOnInitialized
 {
-    public override void OnGameInitialized()
+    public void OnGameInitialized()
     {
         Log.LogInfo("Game has initialized!");
     }

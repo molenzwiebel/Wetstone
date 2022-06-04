@@ -17,7 +17,10 @@ $ cd Wetstone
 $ dotnet restore
 ```
 
-2. Adjust the `UnhollowedDllPath` in `Wetstone.csproj` to point to your installation of V Rising.
+2. Adjust the `UnhollowedDllPath` in `Wetstone.csproj` to point to your installation of VRising.
+    - Make sure you have installed [BepInEx](https://v-rising.thunderstore.io/package/BepInEx/BepInExPack_V_Rising/) in your game.
+    - Run the game at least once to make BepInEx generate unhollowed assemblies.
+    - You should now have a directory in `{GameDir}/BepInEx/unhollowed`. Use the full path to this folder as `UnhollowedDllPath`.
 
 3. Build the plugin
 ```shell

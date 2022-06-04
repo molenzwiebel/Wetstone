@@ -29,7 +29,7 @@ Now that we have an empty project, we need to add the game files. Open `MyNewPlu
 
 ```xml
 <PropertyGroup>
-  <UnhollowedDllPath>C:\Path\To\Your\VRising\BepInEx\unhollowed</UnhollowedDllPath>
+    <UnhollowedDllPath>C:\Path\To\Your\VRising\BepInEx\unhollowed</UnhollowedDllPath>
 </PropertyGroup>
 ```
 
@@ -87,7 +87,7 @@ Now, add the following section at the bottom. This will add some common dependen
 </ItemGroup>
 ```
 
-Note that these are not all the available dependencies. If you need to access some class, function, type etc. defined outside of these, simply add a new `Reference` element:
+Note that these are not all the available dependencies. If you need to access some class, function, type etc. defined outside of these, simply add a new `Reference` element. Usually your editor will tell you exactly in which assembly it is located, at which point you can add it:
 
 ```xml
 <Reference Include="NameOfModule">
@@ -127,9 +127,11 @@ First, run the following command to build:
 $ dotnet build
 ```
 
-This will create a built version of your mod in `bin/Debug/netstandard2.1/MyNewPlugin.dll`. To install the mod, simply copy this `.dll` into your `(game folder)/BepInEx/plugins` directory, then launch the game (or the server).
+This will create a built version of your mod in `bin/Debug/netstandard2.1/MyNewPlugin.dll`. To install the mod, simply copy this `.dll` into your `(game folder)/BepInEx/plugins` directory.
 
-If everything worked correctly, your BepInEx logs should look something like this:
+You'll also need to install Wetstone itself, as your plugin depends on it. Download the [latest release](https://v-rising.thunderstore.io/package/molenzwiebel/Wetstone/) and place it in the `plugins` directory, next to your plugin. Finally, launch the game (or the server).
+
+If everything worked correctly, your BepInEx logs (found in `GameFolder/BepInEx/LogOutput.log`) should look something like this:
 
 ```
 [Info   :   BepInEx] Loading [Wetstone 1.0.0]
