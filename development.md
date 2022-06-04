@@ -18,7 +18,7 @@ $ dotnet restore
 ```
 
 2. Adjust the `UnhollowedDllPath` in `Wetstone.csproj` to point to your installation of V Rising.
-    1. Install [BepInEx](https://thunderstore.io/package/bbepis/BepInExPack/) to the game directory
+    1. Install [BepInEx](https://thunderstore.io/package/bbepis/BepInExPack/) to the game (or server) directory
     2. Run the game once, ensuring BepInEx runs
     3. You should now have a directory in `{GameDir}/BepInEx/unhollowed`. Use this in the `.csproj`
 
