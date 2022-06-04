@@ -15,21 +15,24 @@ namespace Wetstone.Features;
 internal static class Reload
 {
 #nullable disable
-    private static string _reloadCommand;
+    private static string _reloadCommandChat;
+    private static string _reloadCommandRcon;
     private static string _reloadPluginsFolder;
     private static ReloadBehaviour _clientBehavior;
     private static Keybinding _clientReloadKeybinding;
 #nullable enable
 
-    private static List<BasePlugin> _loadedPlugins = new();
+    private static readonly List<BasePlugin> LoadedPlugins = new();
 
-    internal static void Initialize(string reloadCommand, string reloadPluginsFolder)
+    internal static void Initialize(string reloadCommandChat,string reloadCommandRcon, string reloadPluginsFolder)
     {
-        _reloadCommand = reloadCommand;
+        _reloadCommandChat = reloadCommandChat;
+        _reloadCommandRcon = reloadCommandRcon;
         _reloadPluginsFolder = reloadPluginsFolder;
 
         // note: no need to remove this on unload, since we'll unload the hook itself anyway
-        Hooks.Chat.OnChatMessage += HandleReloadCommand;
+        Hooks.Chat.OnChatMessage += HandleReloadChatCommand;
+        Hooks.Rcon.OnRconMessage += HandleReloadRconCommand;
 
         if (VWorld.IsClient)
         {
@@ -48,7 +51,8 @@ internal static class Reload
 
     internal static void Uninitialize()
     {
-        Hooks.Chat.OnChatMessage -= HandleReloadCommand;
+        Hooks.Chat.OnChatMessage -= HandleReloadChatCommand;
+        Hooks.Rcon.OnRconMessage -= HandleReloadRconCommand;
 
         if (_clientBehavior != null)
         {
@@ -56,9 +60,9 @@ internal static class Reload
         }
     }
 
-    private static void HandleReloadCommand(VChatEvent ev)
+    private static void HandleReloadChatCommand(VChatEvent ev)
     {
-        if (ev.Message != _reloadCommand) return;
+        if (ev.Message != _reloadCommandChat) return;
         if (!ev.User.IsAdmin) return; // ignore non-admin reload attempts
 
         ev.Cancel();
@@ -75,12 +79,30 @@ internal static class Reload
             ev.User.SendSystemMessage($"Did not reload any plugins because no reloadable plugins were found. Check the console for more details.");
         }
     }
+    private static void HandleReloadRconCommand(VRconEvent ev)
+    {
+        WetstonePlugin.Logger.LogInfo($"HandleReloadRconCommand: \"{ev.Message}\"");
+
+        if (ev.Message != _reloadCommandRcon) return;
+
+        UnloadPlugins();
+        var loaded = LoadPlugins();
+
+        if (loaded.Count > 0)
+        {
+            WetstonePlugin.Logger.LogInfo($"Reloaded {string.Join(", ", loaded)}. See console for details.");
+        }
+        else
+        {
+            WetstonePlugin.Logger.LogInfo($"Did not reload any plugins because no reloadable plugins were found. Check the console for more details.");
+        }
+    }
 
     private static void UnloadPlugins()
     {
-        for (int i = _loadedPlugins.Count - 1; i >= 0; i--)
+        for (int i = LoadedPlugins.Count - 1; i >= 0; i--)
         {
-            var plugin = _loadedPlugins[i];
+            var plugin = LoadedPlugins[i];
 
             if (!plugin.Unload())
             {
@@ -88,7 +110,7 @@ internal static class Reload
             }
             else
             {
-                _loadedPlugins.RemoveAt(i);
+                LoadedPlugins.RemoveAt(i);
             }
         }
     }
@@ -97,7 +119,7 @@ internal static class Reload
     {
         if (!Directory.Exists(_reloadPluginsFolder)) return new();
 
-        return Directory.GetFiles(_reloadPluginsFolder, "*.dll").SelectMany(LoadPlugin).ToList();
+        return Directory.GetFiles(_reloadPluginsFolder, "*.dll", SearchOption.AllDirectories).SelectMany(LoadPlugin).ToList();
     }
 
     private static List<string> LoadPlugin(string path)
@@ -126,14 +148,14 @@ internal static class Reload
             }
 
             // skip plugins already loaded
-            if (_loadedPlugins.Any(x => x.GetType() == pluginType)) continue;
+            if (LoadedPlugins.Any(x => x.GetType() == pluginType)) continue;
 
             try
             {
                 // we skip chainloader here and don't check dependencies. Fast n dirty.
                 var plugin = (BasePlugin)Activator.CreateInstance(pluginType);
                 var metadata = MetadataHelper.GetMetadata(plugin);
-                _loadedPlugins.Add(plugin);
+                LoadedPlugins.Add(plugin);
                 plugin.Load();
                 loaded.Add(metadata.Name);
 
