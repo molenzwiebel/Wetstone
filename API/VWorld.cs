@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using Unity.Entities;
+using UnityEngine;
 
 namespace Wetstone.API;
 
@@ -50,12 +50,12 @@ public static class VWorld
     /// <summary>
     /// Return whether we're currently running on the server build of VRising.
     /// </summary>
-    public static bool IsServer => _serverWorld != null || Process.GetCurrentProcess().ProcessName == "VRisingServer";
+    public static bool IsServer => Application.productName == "VRisingServer";
 
     /// <summary>
     /// Return whether we're currently running on the client build of VRising.
     /// </summary>
-    public static bool IsClient => !IsServer;
+    public static bool IsClient => Application.productName == "VRising";
 
     private static World? GetWorld(string name)
     {

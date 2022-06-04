@@ -10,7 +10,7 @@ Wetstone is a modding library for both client and server mods for V Rising. By i
 
 ### Configuration
 
-Wetstone supports the following configuration settings, available in `BepInEx/plugins/xyz.molenzwiebel.wetstone.cfg`.
+Wetstone supports the following configuration settings, available in `BepInEx/config/xyz.molenzwiebel.wetstone.cfg`.
 
 **Client/Server Options:**
 - `EnableReloading` [default `true`]: Whether the reloading feature is enabled.

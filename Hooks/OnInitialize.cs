@@ -40,6 +40,14 @@ static class OnInitialize
                 runOnInitialized.OnGameInitialized();
             }
         }
+
+        foreach (var plugin in Features.Reload._loadedPlugins)
+        {
+            if (plugin is IRunOnInitialized runOnInitialized)
+            {
+                runOnInitialized.OnGameInitialized();
+            }
+        }
     }
 
     // these are intentionally different classes, even if their bodies _currently_ are the same
@@ -47,9 +55,9 @@ static class OnInitialize
     private static class ServerDetours
     {
         // use of string here is intentional, avoids issues if the class somehow does not exist
-        [HarmonyPatch("ProjectM.Bootstrap", "Unity_Entities_ICustomBootstrap_Initialize")]
+        [HarmonyPatch("ProjectM.GameBootstrap", "Start")]
         [HarmonyPostfix]
-        public static void Initialize(string defaultWorldName)
+        public static void Initialize()
         {
             InvokePlugins();
         }
@@ -58,9 +66,9 @@ static class OnInitialize
     private static class ClientDetours
     {
         // use of string here is intentional, avoids issues if the class somehow does not exist
-        [HarmonyPatch("ProjectM.Bootstrap", "Unity_Entities_ICustomBootstrap_Initialize")]
+        [HarmonyPatch("ProjectM.CustomWorldSpawning", "AddSystemsToWorld")]
         [HarmonyPostfix]
-        public static void Initialize(string defaultWorldName)
+        public static void Initialize()
         {
             InvokePlugins();
         }

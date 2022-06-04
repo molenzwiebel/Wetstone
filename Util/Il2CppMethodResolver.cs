@@ -13,7 +13,7 @@ namespace Wetstone.Util;
 /// instance methods, since il2cpp generates an unboxing trampoline for them.
 ///
 /// We on-demand disassemble the method and find the correct method pointer.
-internal class Il2CppMethodResolver
+public class Il2CppMethodResolver
 {
     private static ulong ExtractTargetAddress(in Instruction instruction)
     {

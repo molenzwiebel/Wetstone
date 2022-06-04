@@ -21,7 +21,7 @@ internal static class Reload
     private static Keybinding _clientReloadKeybinding;
 #nullable enable
 
-    private static List<BasePlugin> _loadedPlugins = new();
+    internal static List<BasePlugin> _loadedPlugins = new();
 
     internal static void Initialize(string reloadCommand, string reloadPluginsFolder)
     {
