@@ -1,3 +1,4 @@
+using System;
 using UnhollowerRuntimeLib;
 using UnityEngine;
 
@@ -20,12 +21,28 @@ public class GameFrame : MonoBehaviour
 
     void Update()
     {
-        OnUpdate?.Invoke();
+        try
+        {
+            OnUpdate?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            WetstonePlugin.Logger.LogError("Error dispatching OnUpdate event:");
+            WetstonePlugin.Logger.LogError(ex);
+        }
     }
 
     void LateUpdate()
     {
-        OnLateUpdate?.Invoke();
+        try
+        {
+            OnLateUpdate?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            WetstonePlugin.Logger.LogError("Error dispatching OnLateUpdate event:");
+            WetstonePlugin.Logger.LogError(ex);
+        }
     }
 
     public static void Initialize()
