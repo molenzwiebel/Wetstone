@@ -1,5 +1,6 @@
 using System;
 using Wetstone.Network.Events;
+using Wetstone.Network.Events.Incoming.Ban;
 
 namespace Wetstone.Network;
 
@@ -21,6 +22,11 @@ public static class ServerEvent
     /// A player logs in as an admin.
     /// </summary>
     public static event GenericEventDelegate<AdminAuthEventArgs>? AdminAuth;
+
+    /// <summary>
+    /// A player admin ban another player
+    /// </summary>
+    public static event GenericEventDelegate<BanEventArgs>? Ban;
 
     /// <summary>
     /// A player logs out as an admin.
@@ -147,6 +153,11 @@ public static class ServerEvent
     public static event GenericEventDelegate<EnterShapeshiftEventArgs>? EnterShapeshift;
 
     /// <summary>
+    /// A player admin use give or giveset console command
+    /// </summary>
+    public static event GenericEventDelegate<GiveDebugEventArgs>? GiveDebug;
+
+    /// <summary>
     /// A player gives up after being downed.
     /// For some reason this event triggers multiple times if the player holds X for longer.
     /// </summary>
@@ -175,11 +186,13 @@ public static class ServerEvent
             nameof(KillEventArgs) => KillEvent,
             nameof(KickEventArgs) => KickEvent,
             nameof(AdminAuthEventArgs) => AdminAuth,
+            nameof(BanEventArgs) => Ban,
             nameof(EquipItemEventArgs) => EquipItem,
             nameof(ChatMessageEventArgs) => ChatMessage,
             nameof(DeauthAdminEventArgs) => DeauthAdmin,
             nameof(UnequipItemEventArgs) => UnequipItem,
             nameof(VivoxClientEventArgs) => VivoxClient,
+            nameof(GiveDebugEventArgs) => GiveDebug,
             nameof(GiveUpReviveEventArgs) => GiveUpRevive,
             nameof(SetMapMarkerEventArgs) => SetMapMarker,
             nameof(SortAllItemsEventArgs) => SortAllItems,
