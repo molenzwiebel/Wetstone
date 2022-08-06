@@ -72,6 +72,11 @@ public static class ServerEvent
     public static event GenericEventDelegate<DropItemAtSlotEventArgs>? DropItemAtSlot;
 
     /// <summary>
+    /// A player admin kick another player
+    /// </summary>
+    public static event GenericEventDelegate<KickEventArgs>? KickEvent;
+
+    /// <summary>
     /// A player dies (afaik only when a player uses "Unstuck" from the menu)
     /// </summary>
     public static event GenericEventDelegate<KillEventArgs>? KillEvent;
@@ -168,6 +173,7 @@ public static class ServerEvent
         return e.GetType().Name switch
         {
             nameof(KillEventArgs) => KillEvent,
+            nameof(KickEventArgs) => KickEvent,
             nameof(AdminAuthEventArgs) => AdminAuth,
             nameof(EquipItemEventArgs) => EquipItem,
             nameof(ChatMessageEventArgs) => ChatMessage,
