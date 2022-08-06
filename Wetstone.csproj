@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PackageId>Wetstone</PackageId>
@@ -19,7 +19,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
 
-    <UnhollowedDllPath>D:\Games\Steam\steamapps\common\VRising\BepInEx\unhollowed</UnhollowedDllPath>
+    <UnhollowedDllPath>D:\steamcmd\steamapps\common\VRisingDedicatedServer\BepInEx\unhollowed</UnhollowedDllPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -90,5 +90,16 @@
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(UnhollowedDllPath)\Unity.TextMeshPro.dll</HintPath>
     </Reference>
+
+	  <Reference Include="Unity.Mathematics">
+		  <HintPath>$(UnhollowedDllPath)/Unity.Mathematics.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Unity.Mathematics.Extensions">
+		  <HintPath>$(UnhollowedDllPath)/Unity.Mathematics.Extensions.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Unity.Mathematics.Extensions.Hybrid">
+		  <HintPath>$(UnhollowedDllPath)/Unity.Mathematics.Extensions.Hybrid.dll</HintPath>
+	  </Reference>
+	  
   </ItemGroup>
 </Project>
