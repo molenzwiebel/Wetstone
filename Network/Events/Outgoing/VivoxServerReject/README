@@ -1,0 +1,1 @@
+This event is sent back from the server if Vivox, the voip service, is not configured / running.
