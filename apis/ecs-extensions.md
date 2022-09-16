@@ -18,6 +18,7 @@ The `Wetstone.API.VWorld` class has convenience methods for accessing ECS world 
 
 - `VWorld.Client`: Returns the currently active client ECS world.
 - `VWorld.Server`: Returns the currently active server ECS world.
+- `VWorld.Game`: Returns the currently active ECS world, resolving to either `VWorld.Client` or `VWorld.Server` based on whether this is a client or server instance.
 - `VWorld.Default`: Returns the default ECS world used at Unity startup. Some global systems, such as the client's `InputSystem`, are registered on this ECS world.
 - `VWorld.IsClient`: Returns a boolean indicating whether this is a V Rising client.
 - `VWorld.IsServer`: Returns a boolean indicating whether this is a V Rising server.
