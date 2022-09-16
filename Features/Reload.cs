@@ -106,6 +106,7 @@ internal static class Reload
         defaultResolver.AddSearchDirectory(_reloadPluginsFolder);
         defaultResolver.AddSearchDirectory(Paths.ManagedPath);
         defaultResolver.AddSearchDirectory(Paths.BepInExAssemblyDirectory);
+        defaultResolver.AddSearchDirectory(Preloader.IL2CPPUnhollowedPath);
 
         using var dll = AssemblyDefinition.ReadAssembly(path, new() { AssemblyResolver = defaultResolver });
         dll.Name.Name = $"{dll.Name.Name}-{DateTime.Now.Ticks}";

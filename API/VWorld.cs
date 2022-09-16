@@ -18,7 +18,8 @@ public static class VWorld
     {
         get
         {
-            if (_serverWorld != null) return _serverWorld;
+            if (_serverWorld != null && _serverWorld.IsCreated)
+                return _serverWorld;
 
             _serverWorld = GetWorld("Server")
                 ?? throw new System.Exception("There is no Server world (yet). Did you install a server mod on the client?");
@@ -33,7 +34,8 @@ public static class VWorld
     {
         get
         {
-            if (_clientWorld != null) return _clientWorld;
+            if (_clientWorld != null && _clientWorld.IsCreated)
+                return _clientWorld;
 
             _clientWorld = GetWorld("Client_0")
                 ?? throw new System.Exception("There is no Client world (yet). Did you install a client mod on the server?");
@@ -46,6 +48,12 @@ public static class VWorld
     /// to store some "global" systems, like the InputSystem.
     /// </summary>
     public static World Default => World.DefaultGameObjectInjectionWorld;
+
+    /// <summary>
+    /// Returns the "game" ECS world for the current instance. This will return either
+    /// VWorld.Client or VWorld.Server, depending on what instance of VRising is running.
+    /// </summary>
+    public static World Game => IsClient ? VWorld.Client : VWorld.Server;
 
     /// <summary>
     /// Return whether we're currently running on the server build of VRising.

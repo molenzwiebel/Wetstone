@@ -14,6 +14,8 @@ public static class VExtensions
     /// </summary>
     public static void SendSystemMessage(this User user, string message)
     {
+        if (!VWorld.IsServer) throw new System.Exception("SendSystemMessage can only be called on the server.");
+
         ServerChatUtils.SendSystemMessageToClient(VWorld.Server.EntityManager, user, message);
     }
 
@@ -25,9 +27,9 @@ public static class VExtensions
     public static void WithComponentData<T>(this Entity entity, ActionRef<T> action)
         where T : struct
     {
-        var component = VWorld.Server.EntityManager.GetComponentData<T>(entity);
+        var component = VWorld.Game.EntityManager.GetComponentData<T>(entity);
         action(ref component);
-        VWorld.Server.EntityManager.SetComponentData<T>(entity, component);
+        VWorld.Game.EntityManager.SetComponentData<T>(entity, component);
     }
 
     public delegate void ActionRef<T>(ref T item);
