@@ -4,18 +4,31 @@ using UnityEngine;
 
 namespace Wetstone.Hooks;
 
+public delegate void GameFrameUpdateEventHandler();
+
+/// <summary>
+/// This class provides hooks for the Update and LateUpdate frame
+/// functions invoked by Unity. Using this class is preferable to
+/// injecting your own MonoBehavior, as it will allow you to reload
+/// your mod without restarting the game (injecting a MonoBehavior
+/// into the unmanaged runtime cannot be done multiple times). To
+/// use this class, simply subscribe to the Update and/or LateUpdate
+/// events.
+/// </summary>
 public class GameFrame : MonoBehaviour
 {
     private static GameFrame? _instance;
-    public delegate void GameFrameUpdateEventHandler();
 
     /// <summary>
-    /// Event emitted every frame update
+    /// This event will be emitted on every Update call. It may be
+    /// more performant to inject your own MonoBehavior if you do not
+    /// need to be invoked every frame.
     /// </summary>
     public static event GameFrameUpdateEventHandler? OnUpdate;
 
     /// <summary>
-    /// Event emitted every frame late update
+    /// This event will be emitted on every LateUpdate call. The same
+    /// considerations as with the OnUpdate event apply. 
     /// </summary>
     public static event GameFrameUpdateEventHandler? OnLateUpdate;
 
@@ -62,5 +75,4 @@ public class GameFrame : MonoBehaviour
         Destroy(_instance);
         _instance = null;
     }
-
 }

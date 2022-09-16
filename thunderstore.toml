@@ -4,7 +4,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "molenzwiebel"
 name = "Wetstone"
-versionNumber = "0.0.1"
+versionNumber = "1.2.0"
 description = "Plugin framework and general utilities for V Rising mods."
 websiteUrl = "https://github.com/molenzwiebel/Wetstone"
 containsNsfwContent = false

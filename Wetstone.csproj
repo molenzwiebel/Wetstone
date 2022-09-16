@@ -14,7 +14,7 @@
     <Description>Plugin framework and general utilities for V Rising mods.</Description>
 
     <BepInExPluginGuid>xyz.molenzwiebel.wetstone</BepInExPluginGuid>
-    <Version>1.0.0</Version>
+    <Version>1.2.0</Version>
 
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>

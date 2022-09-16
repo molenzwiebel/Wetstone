@@ -1,4 +1,6 @@
-# Wetstone - V Rising Mod API
+![](https://i.imgur.com/XghiZXX.png)
+
+---
 
 Wetstone is a modding library for both client and server mods for V Rising. By itself, it does not do much except allow you to reload plugins you've put in the Wetstone plugins folder.
 
@@ -13,7 +15,7 @@ Wetstone is a modding library for both client and server mods for V Rising. By i
 Wetstone supports the following configuration settings, available in `BepInEx/config/xyz.molenzwiebel.wetstone.cfg`.
 
 **Client/Server Options:**
-- `EnableReloading` [default `true`]: Whether the reloading feature is enabled.
+- `EnableReloading` [default `false`]: Whether the reloading feature is enabled.
 - `ReloadablePluginsFolder` [default `BepInEx/WetstonePlugins`]: The path to the directory where reloadable plugins should be searched. Relative to the game directory.
 
 **Client Options:**
@@ -30,4 +32,18 @@ Post an issue on the [GitHub repository](https://github.com/molenzwiebel/Wetston
 
 ### Changelog
 
-- **1.0.0** Initial release
+- **1.2.0**
+    - Fixed the `VWorld` helpers to not return stale world instances when disconnecting and reconnecting to servers on a client.
+        - This also resolves a crash when sending custom network messages after disconnecting and reconnecting to a server.
+    - Added the `GameFrame` hook API for easily subscribing to frame callbacks (thanks @adainrivers!)
+    - Included unhollowed assembly DLLs in the search path for reloaded plugins.
+
+- **1.1.0**
+    - Added initial version of networking API for sending network messages between client and server.
+    - Fixed `VWorld.IsClient` and `VWorld.IsServer` to always return correct values.
+    - Exposed `Il2CppMethodResolver` and `NativeHookUtil`.
+    - Added support for the game initialization hook for client-side plugins. The initialization hook will be called on startup, when the default world is initialized.
+    - Disabled reload command by default.
+
+- **1.0.0**
+    - Initial release
