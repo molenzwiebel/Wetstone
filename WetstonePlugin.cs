@@ -44,6 +44,7 @@ namespace Wetstone
 
             Hooks.OnInitialize.Initialize();
             Network.SerializationHooks.Initialize();
+            Hooks.GameFrame.Initialize();
 
             Logger.LogInfo($"Wetstone v{PluginInfo.PLUGIN_VERSION} loaded.");
 
@@ -70,6 +71,7 @@ namespace Wetstone
 
             Hooks.OnInitialize.Uninitialize();
             Network.SerializationHooks.Uninitialize();
+            Hooks.GameFrame.Uninitialize();
 
             return true;
         }
