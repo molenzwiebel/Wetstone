@@ -6,6 +6,7 @@ using Stunlock.Network;
 using Unity.Collections;
 using Unity.Entities;
 using Wetstone.API;
+using Wetstone.Network.Models;
 using Wetstone.Util;
 using static NetworkEvents_Serialize;
 
@@ -46,10 +47,30 @@ internal static class SerializationHooks
     {
         var eventType = *(NetworkEventType*)&networkEventType;
 
+        var eventId = eventType.EventId;
+
+        var em = *(EntityManager*)&entityManager;
+        var realEntity = *(Entity*)&entity;
+
+        var networkEvent = new OutgoingNetworkEvent(eventType, eventId, em, realEntity);
+
         // if this is not a custom event, just call the original function
         if (eventType.EventId != SerializationHooks.WETSTONE_NETWORK_EVENT_ID)
         {
+
+
+            if (!NetworkEventManager.HandleEvent(networkEvent, out var cancelled))
+            {
+                WetstonePlugin.Logger?.LogError($"Unhandled outgoing event: {NetworkEvents.GetNetworkEventName(eventId)}");
+            }
+
+            if (cancelled)
+            {
+                return;
+            }
+
             SerializeOriginal!(entityManager, networkEventType, netBufferOut, entity);
+            
             return;
         }
 
@@ -60,7 +81,6 @@ internal static class SerializationHooks
         var netBuffer = new NetBufferOut(new IntPtr((long)(netBufferOut - 0x10)));
 
         // extract the custom network event
-        var realEntity = *(Entity*)&entity;
         var data = (CustomNetworkEvent)VWorld.Server.EntityManager.GetComponentObject<Il2CppSystem.Object>(realEntity, CustomNetworkEvent.ComponentType);
 
         // write out the event ID and the data
@@ -80,14 +100,29 @@ internal static class SerializationHooks
         // this is the same adjustment that we do in the Serialize hook
         var netBufferIn = new NetBufferIn(new IntPtr((long)(netBuffer - 0x10)));
 
-        // read event ID, and if it's not our custom event, call the original function
+        // read event ID, and if it's not our custom event, call the NetEvent function
         var eventId = netBufferIn.ReadUInt32();
         if (eventId != SerializationHooks.WETSTONE_NETWORK_EVENT_ID)
         {
-            // rewind the buffer
             netBufferIn.m_readPosition -= 32;
 
+            var eventIdInt32 = netBufferIn.ReadInt32();
+
+            var networkEvent = new IncomingNetworkEvent(netBufferIn, eventIdInt32, eventParams);
+
+            if (!NetworkEventManager.HandleEvent(networkEvent, out var cancelled))
+            {
+                WetstonePlugin.Logger?.LogError($"Unhandled incoming event: {NetworkEvents.GetNetworkEventName(eventIdInt32)}");
+            }
+
+            if (cancelled)
+            {
+                return;
+            }
+
+            netBufferIn.m_readPosition = 72;
             DeserializeOriginal!(commandBuffer, netBuffer, eventParams);
+
             return;
         }
 

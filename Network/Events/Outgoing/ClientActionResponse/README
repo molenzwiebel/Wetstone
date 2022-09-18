@@ -1,0 +1,6 @@
+This is a server response to a bunch of client request events:
+
+- MoveItemBetweenInventoriesEvent
+- SortAllItemsEvent
+
+Probably more

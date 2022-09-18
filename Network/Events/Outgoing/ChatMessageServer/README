@@ -1,0 +1,2 @@
+This event is a response from a ChatMessage event from the client.
+I'm guessing this one is responsible for propogating the messages to all other clients.
