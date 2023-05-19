@@ -1,12 +1,12 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-using BepInEx.IL2CPP;
 using BepInEx.Logging;
+using BepInEx.Unity.IL2CPP;
 using Wetstone.API;
 
 namespace Wetstone
 {
-    [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+    [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
     public class WetstonePlugin : BasePlugin
     {
 #nullable disable
@@ -46,7 +46,7 @@ namespace Wetstone
             Hooks.GameFrame.Initialize();
             Network.SerializationHooks.Initialize();
 
-            Logger.LogInfo($"Wetstone v{PluginInfo.PLUGIN_VERSION} loaded.");
+            Logger.LogInfo($"Wetstone v{MyPluginInfo.PLUGIN_VERSION} loaded.");
 
             // NOTE: MUST BE LAST. This initializes plugins that depend on our state being set up.
             if (VWorld.IsClient || _enableReloadCommand.Value)

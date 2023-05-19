@@ -1,5 +1,6 @@
 
 using BepInEx.IL2CPP;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Wetstone.API;
 

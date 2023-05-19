@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
-using BepInEx.IL2CPP.Hook;
+using BepInEx.Unity.IL2CPP.Hook;
+using MonoMod.RuntimeDetour;
 using ProjectM.Network;
 using Stunlock.Network;
 using Unity.Collections;
@@ -17,16 +18,16 @@ internal static class SerializationHooks
     // chosen by fair dice roll
     internal const int WETSTONE_NETWORK_EVENT_ID = 0x000FD00D;
 
-    private static FastNativeDetour? _serializeDetour;
-    private static FastNativeDetour? _deserializeDetour;
+    private static INativeDetour? _serializeDetour;
+    private static INativeDetour? _deserializeDetour;
 
     // Detour events.
     public static void Initialize()
     {
         unsafe
         {
-            _serializeDetour = NativeHookUtil.Detour(typeof(NetworkEvents_Serialize), "SerializeEvent", SerializeHook, out SerializeOriginal);
-            _deserializeDetour = NativeHookUtil.Detour(typeof(NetworkEvents_Serialize), "DeserializeEvent", DeserializeHook, out DeserializeOriginal);
+            _serializeDetour = NativeHookUtil.IDetour(typeof(NetworkEvents_Serialize), "SerializeEvent", SerializeHook, out SerializeOriginal);
+            _deserializeDetour = NativeHookUtil.IDetour(typeof(NetworkEvents_Serialize), "DeserializeEvent", DeserializeHook, out DeserializeOriginal);
         }
     }
 
@@ -37,57 +38,52 @@ internal static class SerializationHooks
         _deserializeDetour?.Dispose();
     }
 
+
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public unsafe delegate void SerializeEvent(IntPtr entityManager, UInt64 networkEventType, UInt64 netBufferOut, IntPtr entity);
+    public unsafe delegate void SerializeEvent(IntPtr entityManager, IntPtr networkEventType, IntPtr netBufferOut, IntPtr entity);
 
     public static SerializeEvent? SerializeOriginal;
 
-    public unsafe static void SerializeHook(IntPtr entityManager, UInt64 networkEventType, UInt64 netBufferOut, IntPtr entity)
+    public unsafe static void SerializeHook(IntPtr entityManager, IntPtr networkEventType, IntPtr netBuffer, IntPtr entity)
     {
         var eventType = *(NetworkEventType*)&networkEventType;
 
         // if this is not a custom event, just call the original function
         if (eventType.EventId != SerializationHooks.WETSTONE_NETWORK_EVENT_ID)
         {
-            SerializeOriginal!(entityManager, networkEventType, netBufferOut, entity);
+            SerializeOriginal!(entityManager, networkEventType, netBuffer, entity);
             return;
         }
 
-        // we need to adjust by 0x10 here because the managed proxy that Il2CppUnhollower
-        // generates expects a boxed struct, whereas we have a pointer to an unboxed one.
-        // subtracting 0x10 is exactly two pointers, which allows us to fake a boxed struct
-        // with the same underlying data
-        var netBuffer = new NetBufferOut(new IntPtr((long)(netBufferOut - 0x10)));
+        ref NetBufferOut netBufferOut = ref *(NetBufferOut*)netBuffer;
 
         // extract the custom network event
         var realEntity = *(Entity*)&entity;
         var data = (CustomNetworkEvent)VWorld.Server.EntityManager.GetComponentObject<Il2CppSystem.Object>(realEntity, CustomNetworkEvent.ComponentType);
 
         // write out the event ID and the data
-        netBuffer.Write((uint)SerializationHooks.WETSTONE_NETWORK_EVENT_ID);
-        data.Serialize(netBuffer);
+        netBufferOut.Write((uint)SerializationHooks.WETSTONE_NETWORK_EVENT_ID);
+        data.Serialize(ref netBufferOut);
     }
 
     // --------------------------------------------------------------------------------------
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public unsafe delegate void DeserializeEvent(IntPtr commandBuffer, IntPtr netBuffer, DeserializeNetworkEventParams eventParams);
+    public unsafe delegate void DeserializeEvent(IntPtr entityManager, IntPtr commandBuffer, IntPtr netBuffer, DeserializeNetworkEventParams eventParams);
 
     public static DeserializeEvent? DeserializeOriginal;
 
-    public unsafe static void DeserializeHook(IntPtr commandBuffer, IntPtr netBuffer, DeserializeNetworkEventParams eventParams)
+    public unsafe static void DeserializeHook(IntPtr entityManager, IntPtr commandBuffer, IntPtr netBuffer, DeserializeNetworkEventParams eventParams)
     {
-        // this is the same adjustment that we do in the Serialize hook
-        var netBufferIn = new NetBufferIn(new IntPtr((long)(netBuffer - 0x10)));
+        ref NetBufferIn netBufferIn = ref *(NetBufferIn*)netBuffer;
 
-        // read event ID, and if it's not our custom event, call the original function
         var eventId = netBufferIn.ReadUInt32();
         if (eventId != SerializationHooks.WETSTONE_NETWORK_EVENT_ID)
         {
             // rewind the buffer
             netBufferIn.m_readPosition -= 32;
 
-            DeserializeOriginal!(commandBuffer, netBuffer, eventParams);
+            DeserializeOriginal!(entityManager, commandBuffer, netBuffer, eventParams);
             return;
         }
 

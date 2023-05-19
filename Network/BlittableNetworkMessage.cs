@@ -41,7 +41,7 @@ where T : unmanaged
         }
     }
 
-    public void Serialize(NetBufferOut writer)
+    public void Serialize(ref NetBufferOut writer)
     {
         unsafe
         {

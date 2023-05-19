@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using BepInEx.IL2CPP.Hook;
+using MonoMod.RuntimeDetour;
 using ProjectM;
 using ProjectM.Network;
 using Unity.Entities;
@@ -21,7 +21,7 @@ public static class Chat
     /// </summary>
     public static event ChatEventHandler? OnChatMessage;
 
-    private static FastNativeDetour? Detour;
+    private static NativeDetour? Detour;
 
     public static unsafe void Initialize()
     {
