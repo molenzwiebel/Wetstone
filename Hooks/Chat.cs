@@ -1,15 +1,10 @@
 
 using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using BepInEx.Unity.IL2CPP.Hook;
 using HarmonyLib;
-using MonoMod.RuntimeDetour;
 using ProjectM;
 using ProjectM.Network;
 using Unity.Entities;
 using Wetstone.API;
-using Wetstone.Util;
 
 namespace Wetstone.Hooks;
 

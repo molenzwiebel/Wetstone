@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
-using BepInEx.IL2CPP;
 using BepInEx.Unity.IL2CPP;
 using Mono.Cecil;
 using UnityEngine;

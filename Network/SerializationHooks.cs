@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using BepInEx.Unity.IL2CPP.Hook;
-using MonoMod.RuntimeDetour;
 using ProjectM.Network;
 using Stunlock.Network;
 using Unity.Collections;
