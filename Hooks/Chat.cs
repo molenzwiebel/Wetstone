@@ -18,7 +18,6 @@ public static class Chat
     /// </summary>
     public static event ChatEventHandler? OnChatMessage;
 
-    //private static INativeDetour? Detour;
     private static Harmony? _harmony;
 
     public static unsafe void Initialize()
