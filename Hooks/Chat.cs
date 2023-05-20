@@ -54,7 +54,8 @@ public static class Chat
             {
                 OnChatMessage?.Invoke(ev);
 
-                if (ev.Cancelled) return;
+                if (ev.Cancelled)
+                    VWorld.Server.EntityManager.DestroyEntity(entity);
             }
             catch (Exception ex)
             {
