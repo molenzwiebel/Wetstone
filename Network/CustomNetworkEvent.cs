@@ -1,5 +1,6 @@
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.Injection;
 using Stunlock.Network;
-using UnhollowerRuntimeLib;
 using Unity.Entities;
 using Wetstone.API;
 
@@ -36,7 +37,7 @@ internal class CustomNetworkEvent : Il2CppSystem.Object
     }
 
     // Serialize the entire event to the net writer, except event ID.
-    internal void Serialize(NetBufferOut netBuffer)
+    internal void Serialize(ref NetBufferOut netBuffer)
     {
         if (Message == null)
             throw new System.Exception("Tried to serialize a CustomNetworkEvent with no message");
@@ -46,7 +47,7 @@ internal class CustomNetworkEvent : Il2CppSystem.Object
 
         try
         {
-            Message.Serialize(netBuffer);
+            Message.Serialize(ref netBuffer);
         }
         catch (System.Exception ex)
         {
@@ -60,7 +61,7 @@ internal class CustomNetworkEvent : Il2CppSystem.Object
     {
         ClassInjector.RegisterTypeInIl2Cpp(typeof(CustomNetworkEvent));
 
-        var il2cppty = UnhollowerRuntimeLib.Il2CppType.From(typeof(CustomNetworkEvent));
+        var il2cppty = Il2CppType.From(typeof(CustomNetworkEvent));
 
         if (TypeManager.FindTypeIndex(il2cppty) == -1)
         {

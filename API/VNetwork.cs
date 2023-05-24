@@ -16,7 +16,7 @@ namespace Wetstone.API;
 public interface VNetworkMessage
 {
     /// <summary>Serialize this value to the given writer.</summary>
-    void Serialize(NetBufferOut writer);
+    void Serialize(ref NetBufferOut writer);
 
     /// <summary>Deserialize values from the given reader and update the current instance.</summary>
     void Deserialize(NetBufferIn reader);

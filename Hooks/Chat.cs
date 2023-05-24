@@ -1,13 +1,10 @@
 
 using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using BepInEx.IL2CPP.Hook;
+using HarmonyLib;
 using ProjectM;
 using ProjectM.Network;
 using Unity.Entities;
 using Wetstone.API;
-using Wetstone.Util;
 
 namespace Wetstone.Hooks;
 
@@ -21,53 +18,51 @@ public static class Chat
     /// </summary>
     public static event ChatEventHandler? OnChatMessage;
 
-    private static FastNativeDetour? Detour;
+    private static Harmony? _harmony;
 
     public static unsafe void Initialize()
     {
-        if (Detour != null)
+        if (_harmony != null)
             throw new Exception("Detour already initialized. You don't need to call this. The Wetstone plugin will do it for you.");
 
-        var ty = typeof(ChatMessageSystem).GetNestedTypes().First(x => x.Name.Contains("ChatMessageJob"));
-        Detour = NativeHookUtil.Detour(ty, "OriginalLambdaBody", Hook, out Original);
+        _harmony = Harmony.CreateAndPatchAll(typeof(Chat));
     }
 
     public static unsafe void Uninitialize()
     {
-        if (Detour == null)
+        if (_harmony == null)
             throw new Exception("Detour wasn't initialized. Are you trying to unload Wetstone twice?");
 
-        Detour.Dispose();
-        Detour = null;
-
-        OnChatMessage = null;
+        _harmony.UnpatchSelf();
     }
 
-    private static unsafe void Hook(IntPtr _this, Entity* chatMessageEntity, ChatMessageEvent* chatMessage, FromCharacter* fromCharacter)
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(ChatMessageSystem), nameof(ChatMessageSystem.OnUpdate))]
+    public static void OnUpdatePrefix(ChatMessageSystem __instance)
     {
-        var ev = new VChatEvent(fromCharacter->User, fromCharacter->Character, chatMessage->MessageText.ToString(), chatMessage->MessageType);
-
-        WetstonePlugin.Logger.LogInfo($"[Chat] [{ev.Type}] {ev.User.CharacterName}: {ev.Message}");
-
-        try
+        var entities = __instance._ChatMessageQuery.ToEntityArray(Unity.Collections.Allocator.Temp);
+        foreach (var entity in entities)
         {
-            OnChatMessage?.Invoke(ev);
+            var chatMessage = VWorld.Server.EntityManager.GetComponentData<ChatMessageEvent>(entity);
+            var fromCharacter = VWorld.Server.EntityManager.GetComponentData<FromCharacter>(entity);
+            var ev = new VChatEvent(fromCharacter.User, fromCharacter.Character, chatMessage.MessageText.ToString(), chatMessage.MessageType);
 
-            if (ev.Cancelled) return;
-        }
-        catch (Exception ex)
-        {
-            WetstonePlugin.Logger.LogError("Error dispatching chat event:");
-            WetstonePlugin.Logger.LogError(ex);
-        }
+            WetstonePlugin.Logger.LogInfo($"[Chat] [{ev.Type}] {ev.User.CharacterName}: {ev.Message}");
 
-        Original!(_this, chatMessageEntity, chatMessage, fromCharacter);
+            try
+            {
+                OnChatMessage?.Invoke(ev);
+
+                if (ev.Cancelled)
+                    VWorld.Server.EntityManager.DestroyEntity(entity);
+            }
+            catch (Exception ex)
+            {
+                WetstonePlugin.Logger.LogError("Error dispatching chat event:");
+                WetstonePlugin.Logger.LogError(ex);
+            }
+        }
     }
-
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public unsafe delegate void OriginalLambdaBody(IntPtr _this, Entity* chatMessageEntity, ChatMessageEvent* chatMessage, FromCharacter* fromCharacter);
-
-    private static OriginalLambdaBody? Original;
 }
 
 /// <summary>

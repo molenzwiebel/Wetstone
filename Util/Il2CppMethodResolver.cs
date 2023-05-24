@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Reflection;
 using Iced.Intel;
-using UnhollowerBaseLib;
-using UnhollowerBaseLib.Runtime;
-using UnhollowerBaseLib.Runtime.VersionSpecific.MethodInfo;
+using Il2CppInterop.Common;
+using Il2CppInterop.Runtime.Runtime;
+using Il2CppInterop.Runtime.Runtime.VersionSpecific.MethodInfo;
 
 namespace Wetstone.Util;
 
@@ -65,7 +65,7 @@ public class Il2CppMethodResolver
 
     public static unsafe IntPtr ResolveFromMethodInfo(MethodInfo method)
     {
-        var methodInfoField = UnhollowerUtils.GetIl2CppMethodInfoPointerFieldForGeneratedMethod(method);
+        var methodInfoField = Il2CppInteropUtils.GetIl2CppMethodInfoPointerFieldForGeneratedMethod(method);
         if (methodInfoField == null)
             throw new Exception($"Couldn't obtain method info for {method}");
 

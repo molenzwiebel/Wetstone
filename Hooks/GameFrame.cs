@@ -1,5 +1,5 @@
+using Il2CppInterop.Runtime.Injection;
 using System;
-using UnhollowerRuntimeLib;
 using UnityEngine;
 
 namespace Wetstone.Hooks;

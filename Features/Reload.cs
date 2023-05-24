@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
-using BepInEx.IL2CPP;
+using BepInEx.Unity.IL2CPP;
 using Mono.Cecil;
 using UnityEngine;
 using Wetstone.API;
@@ -106,7 +106,7 @@ internal static class Reload
         defaultResolver.AddSearchDirectory(_reloadPluginsFolder);
         defaultResolver.AddSearchDirectory(Paths.ManagedPath);
         defaultResolver.AddSearchDirectory(Paths.BepInExAssemblyDirectory);
-        defaultResolver.AddSearchDirectory(Preloader.IL2CPPUnhollowedPath);
+        defaultResolver.AddSearchDirectory(Path.Combine(Paths.BepInExRootPath, "interop"));
 
         using var dll = AssemblyDefinition.ReadAssembly(path, new() { AssemblyResolver = defaultResolver });
         dll.Name.Name = $"{dll.Name.Name}-{DateTime.Now.Ticks}";

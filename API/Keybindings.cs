@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
 using BepInEx;
@@ -200,14 +199,14 @@ public class Keybinding
     private void ComputeInputFlag()
     {
         var idBytes = Encoding.UTF8.GetBytes(Description.Id);
-        var hash = (long)xxHash64.ComputeHash(idBytes, idBytes.Length);
+        var hash = xxHash64.ComputeHash(idBytes, idBytes.Length);
         var invalid = false;
         do
         {
             invalid = false;
-            foreach (var entry in Enum.GetValues(typeof(InputFlag)).Cast<long>())
+            foreach (var entry in Enum.GetValues<InputFlag>())
             {
-                if (hash == entry)
+                if (hash == (ulong)entry)
                 {
                     invalid = true;
                     hash -= 1;
