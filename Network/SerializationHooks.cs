@@ -38,11 +38,11 @@ internal static class SerializationHooks
     }
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public unsafe delegate void SerializeEvent(IntPtr entityManager, NetworkEventType networkEventType, ref NetBufferOut netBufferOut, IntPtr entity);
+    public unsafe delegate void SerializeEvent(IntPtr entityManager, NetworkEventType networkEventType, ref NetBufferOut netBufferOut, Entity entity);
 
     public static SerializeEvent? SerializeOriginal;
 
-    public unsafe static void SerializeHook(IntPtr entityManager, NetworkEventType networkEventType, ref NetBufferOut netBufferOut, IntPtr entity)
+    public unsafe static void SerializeHook(IntPtr entityManager, NetworkEventType networkEventType, ref NetBufferOut netBufferOut, Entity entity)
     {
         // if this is not a custom event, just call the original function
         if (networkEventType.EventId != SerializationHooks.WETSTONE_NETWORK_EVENT_ID)
@@ -52,8 +52,7 @@ internal static class SerializationHooks
         }
 
         // extract the custom network event
-        var realEntity = *(Entity*)&entity;
-        var data = (CustomNetworkEvent)VWorld.Server.EntityManager.GetComponentObject<Il2CppSystem.Object>(realEntity, CustomNetworkEvent.ComponentType);
+        var data = (CustomNetworkEvent)VWorld.Server.EntityManager.GetComponentObject<Il2CppSystem.Object>(entity, CustomNetworkEvent.ComponentType);
 
         // write out the event ID and the data
         netBufferOut.Write((uint)SerializationHooks.WETSTONE_NETWORK_EVENT_ID);
