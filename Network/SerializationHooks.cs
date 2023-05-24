@@ -25,8 +25,8 @@ internal static class SerializationHooks
     {
         unsafe
         {
-            _serializeDetour = NativeHookUtil.IDetour(typeof(NetworkEvents_Serialize), "SerializeEvent", SerializeHook, out SerializeOriginal);
-            _deserializeDetour = NativeHookUtil.IDetour(typeof(NetworkEvents_Serialize), "DeserializeEvent", DeserializeHook, out DeserializeOriginal);
+            _serializeDetour = NativeHookUtil.Detour(typeof(NetworkEvents_Serialize), "SerializeEvent", SerializeHook, out SerializeOriginal);
+            _deserializeDetour = NativeHookUtil.Detour(typeof(NetworkEvents_Serialize), "DeserializeEvent", DeserializeHook, out DeserializeOriginal);
         }
     }
 
@@ -37,24 +37,19 @@ internal static class SerializationHooks
         _deserializeDetour?.Dispose();
     }
 
-
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public unsafe delegate void SerializeEvent(IntPtr entityManager, IntPtr networkEventType, IntPtr netBufferOut, IntPtr entity);
+    public unsafe delegate void SerializeEvent(IntPtr entityManager, NetworkEventType networkEventType, ref NetBufferOut netBufferOut, IntPtr entity);
 
     public static SerializeEvent? SerializeOriginal;
 
-    public unsafe static void SerializeHook(IntPtr entityManager, IntPtr networkEventType, IntPtr netBuffer, IntPtr entity)
+    public unsafe static void SerializeHook(IntPtr entityManager, NetworkEventType networkEventType, ref NetBufferOut netBufferOut, IntPtr entity)
     {
-        var eventType = *(NetworkEventType*)&networkEventType;
-
         // if this is not a custom event, just call the original function
-        if (eventType.EventId != SerializationHooks.WETSTONE_NETWORK_EVENT_ID)
+        if (networkEventType.EventId != SerializationHooks.WETSTONE_NETWORK_EVENT_ID)
         {
-            SerializeOriginal!(entityManager, networkEventType, netBuffer, entity);
+            SerializeOriginal!(entityManager, networkEventType, ref netBufferOut, entity);
             return;
         }
-
-        ref NetBufferOut netBufferOut = ref *(NetBufferOut*)netBuffer;
 
         // extract the custom network event
         var realEntity = *(Entity*)&entity;
@@ -68,21 +63,19 @@ internal static class SerializationHooks
     // --------------------------------------------------------------------------------------
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-    public unsafe delegate void DeserializeEvent(IntPtr entityManager, IntPtr commandBuffer, IntPtr netBuffer, DeserializeNetworkEventParams eventParams);
+    public unsafe delegate void DeserializeEvent(IntPtr entityManager, IntPtr commandBuffer, ref NetBufferIn netBuffer, DeserializeNetworkEventParams eventParams);
 
     public static DeserializeEvent? DeserializeOriginal;
 
-    public unsafe static void DeserializeHook(IntPtr entityManager, IntPtr commandBuffer, IntPtr netBuffer, DeserializeNetworkEventParams eventParams)
+    public unsafe static void DeserializeHook(IntPtr entityManager, IntPtr commandBuffer, ref NetBufferIn netBufferIn, DeserializeNetworkEventParams eventParams)
     {
-        ref NetBufferIn netBufferIn = ref *(NetBufferIn*)netBuffer;
-
         var eventId = netBufferIn.ReadUInt32();
         if (eventId != SerializationHooks.WETSTONE_NETWORK_EVENT_ID)
         {
             // rewind the buffer
             netBufferIn.m_readPosition -= 32;
 
-            DeserializeOriginal!(entityManager, commandBuffer, netBuffer, eventParams);
+            DeserializeOriginal!(entityManager, commandBuffer, ref netBufferIn, eventParams);
             return;
         }
 

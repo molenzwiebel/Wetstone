@@ -204,9 +204,9 @@ public class Keybinding
         do
         {
             invalid = false;
-            foreach (var entry in Enum.GetValues(typeof(InputFlag)))
+            foreach (var entry in Enum.GetValues<InputFlag>())
             {
-                if (hash == (ulong)entry.GetHashCode())
+                if (hash == (ulong)entry)
                 {
                     invalid = true;
                     hash -= 1;
