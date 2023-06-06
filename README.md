@@ -2,13 +2,9 @@
 
 ---
 
-Wetstone is a plugin API for creating mods for V Rising. If you are a mod developer, using Wetstone allows you to take advantage of tools like hot reloading, easy hooks and extensions, and user-friendly configuration.
+# ⚠ Deprecated!
 
-If you're a user that would like to install Wetstone, follow the instructions on the [Thunderstore package page](https://v-rising.thunderstore.io/package/molenzwiebel/Wetstone/). 
-
-If you're a developer that would like to use Wetstone in your plugins, check out the [documentation](https://molenzwiebel.github.io/Wetstone).
-
-If you'd like to contribute to Wetstone, check out the contribution instructions [here](https://molenzwiebel.github.io/Wetstone/development.html).
+Wetstone is no longer in active development and has been succeeded by [Bloodstone](https://github.com/decaprime/Bloodstone). Please update your mods to use Bloodstone instead.
 
 --- 
 
